@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="icons/repeet-logo.png" alt="Repeet logo" width="120" />
+</p>
+
 # Repeet: LeetCode Revision Deck
 
 A local-first Google Chrome extension (Manifest V3) that passively captures every accepted LeetCode submission, lets you attach reflection notes, and resurfaces problems with Anki-style spaced repetition (SM-2).

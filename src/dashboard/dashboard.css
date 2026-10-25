@@ -514,7 +514,8 @@ textarea.notes {
 }
 
 @media (max-width: 620px) {
-  #head {
+@layer components {
+#head {
     flex-wrap: wrap;
     gap: 8px 16px;
     padding: 10px 14px;
@@ -531,4 +532,5 @@ textarea.notes {
     padding-left: 18px;
     padding-right: 18px;
   }
+}
 }

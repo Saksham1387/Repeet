@@ -1,3 +1,4 @@
+@layer components {
 body {
   width: 340px;
   margin: 0;
@@ -86,4 +87,5 @@ footer button {
 
 footer button:hover {
   text-decoration: underline;
+}
 }

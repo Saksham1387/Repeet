@@ -3,6 +3,7 @@ import type { LeetCodeMeta, Question, SetNotesResponse, SubmissionResponse } fro
 import { dayKey } from '../shared/date';
 import { relativeDue } from '../shared/query';
 import { sendRuntimeMessage } from '../shared/messaging';
+import panelTailwindCss from '../../.cache/content-tailwind.css';
 
 export interface PanelState {
   slug: string;
@@ -22,6 +23,7 @@ interface NotePanelProps {
 }
 
 const PANEL_CSS = `
+  @layer components {
   :host { all: initial; }
   * { box-sizing: border-box; }
   .tab {
@@ -65,6 +67,7 @@ const PANEL_CSS = `
   .primary:hover { background: #2640E0; }
   .primary:disabled { opacity: .6; cursor: default; }
   :focus-visible { outline: 2px solid #3550F5; outline-offset: 2px; }
+  }
 `;
 
 export const NotePanel: React.FC<NotePanelProps> = ({
@@ -188,6 +191,7 @@ export const NotePanel: React.FC<NotePanelProps> = ({
 
   return (
     <>
+      <style>{panelTailwindCss}</style>
       <style>{PANEL_CSS}</style>
 
       {/* Slim vertical trigger tab */}

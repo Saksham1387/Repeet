@@ -5,6 +5,13 @@ import { fmtInterval } from '../shared/srs';
 import { relativeDue, plural, problemLabel } from '../shared/query';
 import { slugFromInput, fetchMeta } from '../shared/leetcode';
 import { sendRuntimeMessage } from '../shared/messaging';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 
 interface LibraryTabProps {
   questions: Record<string, Question>;
@@ -168,25 +175,27 @@ export const LibraryTab: React.FC<LibraryTabProps> = ({ questions, onRefreshQues
           value={query}
           onChange={(e) => setQuery(e.target.value)}
         />
-        <select
-          aria-label="Difficulty"
-          value={difficulty}
-          onChange={(e) => setDifficulty(e.target.value)}
-        >
-          <option value="all">All difficulties</option>
-          <option value="Easy">Easy</option>
-          <option value="Medium">Medium</option>
-          <option value="Hard">Hard</option>
-        </select>
-        <select
-          aria-label="Sort"
-          value={sort}
-          onChange={(e) => setSort(e.target.value as SortOption)}
-        >
-          <option value="due">Due soonest</option>
-          <option value="new">Recently added</option>
-          <option value="title">Title</option>
-        </select>
+        <Select value={difficulty} onValueChange={setDifficulty}>
+          <SelectTrigger aria-label="Difficulty" className="min-w-[140px]">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">All difficulties</SelectItem>
+            <SelectItem value="Easy">Easy</SelectItem>
+            <SelectItem value="Medium">Medium</SelectItem>
+            <SelectItem value="Hard">Hard</SelectItem>
+          </SelectContent>
+        </Select>
+        <Select value={sort} onValueChange={(value) => setSort(value as SortOption)}>
+          <SelectTrigger aria-label="Sort" className="min-w-[140px]">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="due">Due soonest</SelectItem>
+            <SelectItem value="new">Recently added</SelectItem>
+            <SelectItem value="title">Title</SelectItem>
+          </SelectContent>
+        </Select>
       </div>
 
       <div className="addform">

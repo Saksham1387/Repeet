@@ -1,3 +1,6 @@
+@import "tailwindcss" source(none);
+@source "../";
+
 :root {
   --paper: #E9EDF3;
   --dot: #C3CCDB;
@@ -13,6 +16,26 @@
   --hard: #D6454A;
   --serif: "Iowan Old Style", "Palatino Linotype", Palatino, "Book Antiqua", Georgia, serif;
   --sans: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+}
+
+@theme inline {
+  --color-background: var(--paper);
+  --color-foreground: var(--ink);
+  --color-muted: #eef1f7;
+  --color-muted-foreground: var(--muted);
+  --color-popover: var(--card);
+  --color-popover-foreground: var(--ink);
+  --color-border: var(--line);
+  --color-input: var(--line);
+  --color-ring: var(--accent);
+  --color-primary: var(--accent);
+  --color-primary-foreground: #ffffff;
+  --color-secondary: #eef1f7;
+  --color-secondary-foreground: var(--ink);
+  --color-accent: #eef1f7;
+  --color-accent-foreground: var(--ink);
+  --color-destructive: var(--hard);
+  --color-destructive-foreground: #ffffff;
 }
 
 * { box-sizing: border-box; }

@@ -2,6 +2,7 @@ import { build as viteBuild } from 'vite';
 import * as esbuild from 'esbuild';
 import fs from 'fs';
 import path from 'path';
+import { execFileSync, spawn } from 'child_process';
 import { fileURLToPath } from 'url';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -9,7 +10,18 @@ const __dirname = path.dirname(__filename);
 const rootDir = path.resolve(__dirname, '..');
 const distDir = path.resolve(rootDir, 'dist');
 
+const tailwindBin = path.resolve(rootDir, 'node_modules/.bin/tailwindcss');
+const contentTwInput = path.resolve(rootDir, 'src/content/tailwind.css');
+const contentTwOutput = path.resolve(rootDir, '.cache/content-tailwind.css');
+
 const isWatch = process.argv.includes('--watch');
+
+function buildContentTailwind() {
+  fs.mkdirSync(path.dirname(contentTwOutput), { recursive: true });
+  execFileSync(tailwindBin, ['-i', contentTwInput, '-o', contentTwOutput, '--minify'], {
+    stdio: 'inherit',
+  });
+}
 
 async function copyStaticAssets() {
   if (!fs.existsSync(distDir)) {
@@ -49,6 +61,9 @@ const scriptConfigs = [
     bundle: true,
     format: 'iife',
     target: 'es2022',
+    loader: {
+      '.css': 'text',
+    },
     define: {
       'process.env.NODE_ENV': '"production"',
     },
@@ -66,21 +81,22 @@ async function buildAll() {
   console.log('🚀 Building Repeet extension...');
   const start = Date.now();
 
-  await copyStaticAssets();
-
   // 1. Build Vite frontend apps (dashboard & popup)
   console.log('📦 Bundling React applications (Dashboard & Popup)...');
   await viteBuild({
     root: rootDir,
     build: {
       outDir: distDir,
-      emptyOutDir: false,
+      emptyOutDir: true,
     },
     configFile: path.resolve(rootDir, 'vite.config.ts'),
   });
 
+  await copyStaticAssets();
+
   // 2. Build Extension scripts with esbuild
   console.log('⚡ Bundling Extension scripts (Background, Content, Inject)...');
+  buildContentTailwind();
   for (const config of scriptConfigs) {
     await esbuild.build(config);
   }
@@ -104,6 +120,19 @@ async function watchAll() {
   });
 
   // Watch scripts
+  buildContentTailwind();
+  const tailwindWatcher = spawn(
+    tailwindBin,
+    ['-i', contentTwInput, '-o', contentTwOutput, '--watch'],
+    { stdio: 'inherit' }
+  );
+  const shutdown = () => {
+    tailwindWatcher.kill();
+    process.exit(0);
+  };
+  process.on('SIGINT', shutdown);
+  process.on('SIGTERM', shutdown);
+
   const contexts = await Promise.all(
     scriptConfigs.map((cfg) => esbuild.context(cfg))
   );

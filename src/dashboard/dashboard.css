@@ -1,3 +1,4 @@
+@layer components {
 #head {
   position: sticky;
   top: 0;
@@ -6,7 +7,7 @@
   align-items: center;
   gap: 28px;
   padding: 12px 28px;
-  background: rgba(233, 237, 243, 0.94);
+  background: var(--header-bg);
   border-bottom: 1px solid var(--line);
   backdrop-filter: blur(4px);
 }
@@ -61,12 +62,12 @@
   padding: 0 6px;
   border-radius: 9px;
   background: var(--accent);
-  color: #fff;
+  color: var(--on-accent);
   text-align: center;
 }
 
 .count.quiet {
-  background: #d5dcea;
+  background: var(--quiet);
   color: var(--muted);
 }
 
@@ -94,7 +95,7 @@
 .bar {
   flex: 1;
   height: 4px;
-  background: #d5dcea;
+  background: var(--bar);
   border-radius: 2px;
   overflow: hidden;
 }
@@ -109,7 +110,7 @@
   background: var(--card);
   border: 1px solid var(--line);
   border-radius: 4px;
-  box-shadow: 0 22px 30px -24px rgba(22, 33, 58, 0.6);
+  box-shadow: 0 22px 30px -24px var(--shadow);
 }
 
 .index-head {
@@ -182,7 +183,7 @@ textarea.notes {
   border: 1px solid var(--line);
   border-radius: 4px;
   padding: 0 6px;
-  background: #fff;
+  background: var(--card-soft);
 }
 
 .rates {
@@ -203,7 +204,7 @@ textarea.notes {
   align-items: center;
   gap: 2px;
   padding: 11px 8px 9px;
-  background: #fff;
+  background: var(--card-soft);
   border: 1px solid var(--line);
   border-bottom: 3px solid var(--c);
   border-radius: 6px;
@@ -277,23 +278,23 @@ textarea.notes {
 .heat i {
   display: block;
   border-radius: 2px;
-  background: #d9e0ec;
+  background: var(--heat-0);
 }
 
 .heat i.l1 {
-  background: #b9c4f9;
+  background: var(--heat-1);
 }
 
 .heat i.l2 {
-  background: #8ea0f7;
+  background: var(--heat-2);
 }
 
 .heat i.l3 {
-  background: #5f78f5;
+  background: var(--heat-3);
 }
 
 .heat i.l4 {
-  background: #3550f5;
+  background: var(--heat-4);
 }
 
 .heat i.gap {
@@ -378,7 +379,7 @@ textarea.notes {
   border: 1px solid var(--line);
   border-radius: 6px;
   padding: 8px 10px;
-  background: #fff;
+  background: var(--card-soft);
 }
 
 .toolbar input[type="search"] {
@@ -458,7 +459,7 @@ textarea.notes {
 }
 
 .row-head:hover {
-  background: #f6f8fc;
+  background: var(--hover);
 }
 
 .row-title {
@@ -484,13 +485,54 @@ textarea.notes {
   border-radius: 4px;
   padding: 6px 10px;
   font: 14px/28px var(--sans);
-  background-color: #fff;
+  background-color: var(--card-soft);
   outline: 0;
   resize: vertical;
 }
 
 .row-body textarea:focus {
   border-color: var(--accent);
+}
+
+.schedule {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px dashed var(--rule);
+}
+
+.schedule-label {
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.schedule-field {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.schedule-field input {
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 6px 8px;
+  background: var(--card-soft);
+  color: var(--ink);
+  font: inherit;
+}
+
+.schedule-field input[type="number"] {
+  width: 70px;
+}
+
+.schedule .btn {
+  padding: 6px 10px;
 }
 
 .row-actions {
@@ -514,8 +556,7 @@ textarea.notes {
 }
 
 @media (max-width: 620px) {
-@layer components {
-#head {
+  #head {
     flex-wrap: wrap;
     gap: 8px 16px;
     padding: 10px 14px;

@@ -20,6 +20,8 @@ Built with **TypeScript**, **React 18**, and **Vite**.
   - Intra-session learning step: Rating *Again* re-queues the card once in the same session.
 - **📅 26-Week Activity Heatmap & Daily Log**: GitHub-style activity contribution matrix tracking daily problem solves and reviews, plus a reverse-chronological timeline.
 - **📚 Searchable Library & Backups**: Search problems by title, problem number, tags, or notes. Filter by difficulty. Add problems manually by URL or slug. Export and import JSON backups.
+- **🗓 Manual Rescheduling**: Set a card's due date or interval, or reset it to a new card, directly from the Library.
+- **🌙 Dark Mode**: Switch between light and dark themes from the dashboard or popup. Your choice is remembered and applied to the in-page note panel too.
 - **🔒 Local-First & Private**: 100% of your data resides in `chrome.storage.local` on your machine. No accounts, no telemetry, no tracking.
 
 ---

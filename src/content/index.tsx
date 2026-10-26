@@ -37,6 +37,20 @@ declare global {
   const rootElement = host.attachShadow({ mode: 'open' });
   (document.body || document.documentElement).append(host);
 
+  const applyPanelTheme = (value: unknown): void => {
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    const dark = value === 'dark' || (value !== 'light' && prefersDark);
+    host.classList.toggle('dark', dark);
+  };
+
+  chrome.storage.local
+    .get('theme')
+    .then(({ theme }) => applyPanelTheme(theme))
+    .catch(() => {});
+  chrome.storage.onChanged.addListener((changes, area) => {
+    if (area === 'local' && changes.theme) applyPanelTheme(changes.theme.newValue);
+  });
+
   const reactRoot = createRoot(rootElement);
 
   // Content Script Container State

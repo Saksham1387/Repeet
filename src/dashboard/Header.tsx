@@ -1,4 +1,5 @@
 import React from 'react';
+import { ThemeToggle } from '@/components/ThemeToggle';
 
 export type DashboardTab = 'review' | 'log' | 'library';
 
@@ -51,6 +52,7 @@ export const Header: React.FC<HeaderProps> = ({
       <div className="streak">
         {streakCount > 0 ? `${streakCount}-day streak` : 'No streak yet'}
       </div>
+      <ThemeToggle />
     </header>
   );
 };

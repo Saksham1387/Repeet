@@ -3,6 +3,7 @@ import type { Question } from '../types';
 import { dayKey } from '../shared/date';
 import { dueList, streak, plural, problemLabel } from '../shared/query';
 import { getQuestions } from '../shared/storage';
+import { ThemeToggle } from '@/components/ThemeToggle';
 
 export const App: React.FC = () => {
   const [questions, setQuestions] = useState<Record<string, Question>>({});
@@ -47,7 +48,10 @@ export const App: React.FC = () => {
 
   return (
     <main id="root">
-      <h1 className="headline">{headline}</h1>
+      <div className="popup-head">
+        <h1 className="headline">{headline}</h1>
+        <ThemeToggle />
+      </div>
       <p className="sub">{sub}</p>
 
       {dueCount > 0 && (

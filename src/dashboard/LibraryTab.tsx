@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useRef } from 'react';
-import type { Question, ImportResponse } from '../types';
+import type { Question, ImportResponse, RescheduleResponse } from '../types';
 import { dayKey } from '../shared/date';
 import { fmtInterval } from '../shared/srs';
 import { relativeDue, plural, problemLabel } from '../shared/query';
@@ -28,6 +28,8 @@ export const LibraryTab: React.FC<LibraryTabProps> = ({ questions, onRefreshQues
   const [addLinkText, setAddLinkText] = useState('');
   const [flash, setFlash] = useState<{ text: string; isErr: boolean }>({ text: '', isErr: false });
   const [editingNotes, setEditingNotes] = useState<Record<string, string>>({});
+  const [dueDrafts, setDueDrafts] = useState<Record<string, string>>({});
+  const [intervalDrafts, setIntervalDrafts] = useState<Record<string, string>>({});
 
   const fileInputRef = useRef<HTMLInputElement>(null);
   const today = dayKey();
@@ -109,6 +111,71 @@ export const LibraryTab: React.FC<LibraryTabProps> = ({ questions, onRefreshQues
     } catch (err) {
       handleFlash(err instanceof Error ? err.message : 'Failed to save notes', true);
     }
+  };
+
+  const clearScheduleDraft = (slug: string) => {
+    setDueDrafts((prev) => {
+      if (!(slug in prev)) return prev;
+      const next = { ...prev };
+      delete next[slug];
+      return next;
+    });
+    setIntervalDrafts((prev) => {
+      if (!(slug in prev)) return prev;
+      const next = { ...prev };
+      delete next[slug];
+      return next;
+    });
+  };
+
+  const handleReschedule = async (
+    q: Question,
+    payload: { due?: string; interval?: number; reset?: boolean }
+  ) => {
+    try {
+      await sendRuntimeMessage<RescheduleResponse>({
+        type: 'RESCHEDULE',
+        slug: q.slug,
+        ...payload,
+      });
+      clearScheduleDraft(q.slug);
+      onRefreshQuestions();
+      handleFlash(
+        payload.reset
+          ? `"${q.title}" reset to a new card.`
+          : `Schedule updated for "${q.title}".`
+      );
+    } catch (err) {
+      handleFlash(err instanceof Error ? err.message : 'Failed to reschedule', true);
+    }
+  };
+
+  const handleSetDue = (q: Question, due: string) => {
+    if (!due) {
+      handleFlash('Pick a due date first.', true);
+      return;
+    }
+    void handleReschedule(q, { due });
+  };
+
+  const handleSetInterval = (q: Question, raw: string) => {
+    const days = Number(raw);
+    if (!Number.isFinite(days) || days < 1) {
+      handleFlash('Interval must be at least 1 day.', true);
+      return;
+    }
+    void handleReschedule(q, { interval: Math.round(days) });
+  };
+
+  const handleResetCard = (q: Question) => {
+    if (
+      !confirm(
+        `Reset "${q.title}" to a new card? It will be due tomorrow; notes and review history stay.`
+      )
+    ) {
+      return;
+    }
+    void handleReschedule(q, { reset: true });
   };
 
   const handleDelete = async (q: Question) => {
@@ -272,6 +339,60 @@ export const LibraryTab: React.FC<LibraryTabProps> = ({ questions, onRefreshQues
                         setEditingNotes((prev) => ({ ...prev, [x.slug]: e.target.value }))
                       }
                     />
+                    <div className="schedule">
+                      <span className="schedule-label">Reschedule</span>
+                      <label className="schedule-field">
+                        <span>Due</span>
+                        <input
+                          type="date"
+                          aria-label={`Due date for ${x.title}`}
+                          value={dueDrafts[x.slug] ?? x.card.due}
+                          onChange={(e) =>
+                            setDueDrafts((prev) => ({ ...prev, [x.slug]: e.target.value }))
+                          }
+                        />
+                      </label>
+                      <button
+                        type="button"
+                        className="btn"
+                        onClick={() => handleSetDue(x, dueDrafts[x.slug] ?? x.card.due)}
+                      >
+                        Set due date
+                      </button>
+                      <label className="schedule-field">
+                        <span>Interval</span>
+                        <input
+                          type="number"
+                          min={1}
+                          max={365}
+                          aria-label={`Interval in days for ${x.title}`}
+                          value={intervalDrafts[x.slug] ?? String(x.card.interval)}
+                          onChange={(e) =>
+                            setIntervalDrafts((prev) => ({ ...prev, [x.slug]: e.target.value }))
+                          }
+                        />
+                        <span>days</span>
+                      </label>
+                      <button
+                        type="button"
+                        className="btn"
+                        onClick={() =>
+                          handleSetInterval(
+                            x,
+                            intervalDrafts[x.slug] ?? String(x.card.interval)
+                          )
+                        }
+                      >
+                        Set interval
+                      </button>
+                      <button
+                        type="button"
+                        className="btn danger"
+                        onClick={() => handleResetCard(x)}
+                      >
+                        Reset to new
+                      </button>
+                    </div>
                     <div className="row-actions">
                       <button
                         type="button"

@@ -57,6 +57,7 @@ export interface Question {
 export interface StorageSchema {
   questions?: Record<string, Question>;
   lastNotified?: string;
+  theme?: 'light' | 'dark';
 }
 
 export type RuntimeMessage =
@@ -64,6 +65,7 @@ export type RuntimeMessage =
   | { type: 'ADD_MANUAL'; meta: LeetCodeMeta; notes?: string }
   | { type: 'SET_NOTES'; slug: string; notes: string }
   | { type: 'REVIEW'; slug: string; rating: Rating }
+  | { type: 'RESCHEDULE'; slug: string; due?: string; interval?: number; reset?: boolean }
   | { type: 'DELETE'; slug: string }
   | { type: 'IMPORT'; questions: Record<string, Question> };
 
@@ -81,6 +83,10 @@ export interface SetNotesResponse {
 }
 
 export interface ReviewResponse {
+  question: Question;
+}
+
+export interface RescheduleResponse {
   question: Question;
 }
 

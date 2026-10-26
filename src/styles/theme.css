@@ -1,41 +1,87 @@
 @import "tailwindcss" source(none);
 @source "../";
+@custom-variant dark (&:where(.dark, .dark *));
 
 :root {
+  color-scheme: light;
   --paper: #E9EDF3;
   --dot: #C3CCDB;
   --ink: #16213A;
   --muted: #5B6784;
   --line: #BFC8D8;
   --card: #FFFFFF;
+  --card-soft: #FFFFFF;
   --rule: #DCE5F7;
   --margin: #E5484D;
   --accent: #3550F5;
+  --accent-hover: #2640E0;
   --easy: #1F9D6B;
   --medium: #B97A00;
   --hard: #D6454A;
+  --hover: #F6F8FC;
+  --bar: #D5DCEA;
+  --quiet: #D5DCEA;
+  --header-bg: rgba(233, 237, 243, 0.94);
+  --shadow: rgba(22, 33, 58, 0.6);
+  --heat-0: #D9E0EC;
+  --heat-1: #B9C4F9;
+  --heat-2: #8EA0F7;
+  --heat-3: #5F78F5;
+  --heat-4: #3550F5;
+  --on-accent: #FFFFFF;
   --serif: "Iowan Old Style", "Palatino Linotype", Palatino, "Book Antiqua", Georgia, serif;
   --sans: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+}
+
+.dark {
+  color-scheme: dark;
+  --paper: #0F1420;
+  --dot: #1F2838;
+  --ink: #E6EAF2;
+  --muted: #9AA6BD;
+  --line: #2A3446;
+  --card: #161D2B;
+  --card-soft: #1A2231;
+  --rule: #243047;
+  --margin: #FF6B6F;
+  --accent: #7488FF;
+  --accent-hover: #5F74F0;
+  --easy: #4ADE9B;
+  --medium: #F5B84B;
+  --hard: #FF7A7E;
+  --hover: #1F2838;
+  --bar: #232C3D;
+  --quiet: #243049;
+  --header-bg: rgba(15, 20, 32, 0.94);
+  --shadow: rgba(0, 0, 0, 0.6);
+  --heat-0: #222C3D;
+  --heat-1: #2F3D63;
+  --heat-2: #41579E;
+  --heat-3: #5A74D6;
+  --heat-4: #7488FF;
+  --on-accent: #FFFFFF;
 }
 
 @theme inline {
   --color-background: var(--paper);
   --color-foreground: var(--ink);
-  --color-muted: #eef1f7;
+  --color-muted: var(--hover);
   --color-muted-foreground: var(--muted);
   --color-popover: var(--card);
   --color-popover-foreground: var(--ink);
+  --color-card: var(--card);
+  --color-card-foreground: var(--ink);
   --color-border: var(--line);
   --color-input: var(--line);
   --color-ring: var(--accent);
   --color-primary: var(--accent);
-  --color-primary-foreground: #ffffff;
-  --color-secondary: #eef1f7;
+  --color-primary-foreground: var(--on-accent);
+  --color-secondary: var(--hover);
   --color-secondary-foreground: var(--ink);
-  --color-accent: #eef1f7;
+  --color-accent: var(--hover);
   --color-accent-foreground: var(--ink);
   --color-destructive: var(--hard);
-  --color-destructive-foreground: #ffffff;
+  --color-destructive-foreground: var(--on-accent);
 }
 
 * { box-sizing: border-box; }
@@ -54,7 +100,7 @@ a { color: var(--accent); }
 
 .chip {
   display: inline-block; font-size: 12px; line-height: 18px; padding: 0 7px;
-  border: 1px solid var(--line); border-radius: 4px; background: #fff; color: var(--muted);
+  border: 1px solid var(--line); border-radius: 4px; background: var(--card-soft); color: var(--muted);
   white-space: nowrap;
 }
 .chip.Easy { color: var(--easy); border-color: currentColor; }
@@ -62,11 +108,11 @@ a { color: var(--accent); }
 .chip.Hard { color: var(--hard); border-color: currentColor; }
 
 .btn {
-  border: 1px solid var(--line); background: #fff; border-radius: 6px; padding: 8px 14px; font-weight: 600;
+  border: 1px solid var(--line); background: var(--card-soft); border-radius: 6px; padding: 8px 14px; font-weight: 600;
 }
 .btn:hover { border-color: var(--ink); }
-.btn.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
-.btn.primary:hover { background: #2640E0; border-color: #2640E0; }
+.btn.primary { background: var(--accent); border-color: var(--accent); color: var(--on-accent); }
+.btn.primary:hover { background: var(--accent-hover); border-color: var(--accent-hover); }
 .btn.danger { color: var(--hard); }
 .btn.big { padding: 12px 22px; font-size: 15px; }
 .btn.wide { width: 100%; }
@@ -77,6 +123,20 @@ a { color: var(--accent); }
   line-height: 28px;
 }
 .muted { color: var(--muted); }
+
+.theme-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  flex: none;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: var(--card-soft);
+  color: var(--muted);
+}
+.theme-toggle:hover { color: var(--ink); border-color: var(--ink); }
 
 @media (prefers-reduced-motion: reduce) {
   * { transition: none !important; animation: none !important; }

@@ -10,6 +10,7 @@ var addDays = (k, n) => {
   d.setDate(d.getDate() + n);
   return dayKey(d);
 };
+var diffDays = (a, b) => Math.round((parseKey(b).getTime() - parseKey(a).getTime()) / 864e5);
 
 // src/shared/srs.ts
 var MAX_INTERVAL = 365;
@@ -167,6 +168,35 @@ var handlers = {
     const today = dayKey();
     q.card = applyRating(q.card, rating, today);
     q.reviews.push({ date: today, ts: Date.now(), rating });
+    await putQuestions(qs);
+    return { question: q };
+  },
+  async RESCHEDULE(msg) {
+    const { slug, due, interval, reset } = msg;
+    const qs = await getQuestions();
+    const q = qs[slug];
+    if (!q) throw new Error("Question not in deck");
+    const today = dayKey();
+    if (reset) {
+      q.card = newCard(today);
+    } else if (typeof due === "string") {
+      if (!/^\d{4}-\d{2}-\d{2}$/.test(due) || dayKey(parseKey(due)) !== due) {
+        throw new Error("Invalid due date");
+      }
+      q.card = {
+        ...q.card,
+        due,
+        interval: Math.max(1, Math.min(MAX_INTERVAL, diffDays(today, due)))
+      };
+    } else if (typeof interval === "number") {
+      if (!Number.isFinite(interval) || interval < 1) {
+        throw new Error("Interval must be at least 1 day");
+      }
+      const days = Math.min(MAX_INTERVAL, Math.round(interval));
+      q.card = { ...q.card, interval: days, due: addDays(today, days) };
+    } else {
+      throw new Error("Provide a due date, an interval, or reset the card");
+    }
     await putQuestions(qs);
     return { question: q };
   },

@@ -5,10 +5,11 @@ import type {
   SubmissionResponse,
   SetNotesResponse,
   ReviewResponse,
+  RescheduleResponse,
   ImportResponse,
 } from '../types';
-import { dayKey } from '../shared/date';
-import { newCard, applyRating } from '../shared/srs';
+import { dayKey, addDays, diffDays, parseKey } from '../shared/date';
+import { newCard, applyRating, MAX_INTERVAL } from '../shared/srs';
 import { dueList } from '../shared/query';
 import { getQuestions, putQuestions } from '../shared/storage';
 
@@ -118,6 +119,38 @@ const handlers = {
     const today = dayKey();
     q.card = applyRating(q.card, rating, today);
     q.reviews.push({ date: today, ts: Date.now(), rating });
+    await putQuestions(qs);
+    return { question: q };
+  },
+
+  async RESCHEDULE(msg: Extract<RuntimeMessage, { type: 'RESCHEDULE' }>): Promise<RescheduleResponse> {
+    const { slug, due, interval, reset } = msg;
+    const qs = await getQuestions();
+    const q = qs[slug];
+    if (!q) throw new Error('Question not in deck');
+    const today = dayKey();
+
+    if (reset) {
+      q.card = newCard(today);
+    } else if (typeof due === 'string') {
+      if (!/^\d{4}-\d{2}-\d{2}$/.test(due) || dayKey(parseKey(due)) !== due) {
+        throw new Error('Invalid due date');
+      }
+      q.card = {
+        ...q.card,
+        due,
+        interval: Math.max(1, Math.min(MAX_INTERVAL, diffDays(today, due))),
+      };
+    } else if (typeof interval === 'number') {
+      if (!Number.isFinite(interval) || interval < 1) {
+        throw new Error('Interval must be at least 1 day');
+      }
+      const days = Math.min(MAX_INTERVAL, Math.round(interval));
+      q.card = { ...q.card, interval: days, due: addDays(today, days) };
+    } else {
+      throw new Error('Provide a due date, an interval, or reset the card');
+    }
+
     await putQuestions(qs);
     return { question: q };
   },

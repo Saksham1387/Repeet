@@ -28,10 +28,10 @@ export const Header: React.FC<HeaderProps> = ({
     <header id="head">
       <div className="brand">
         <span className="logo" aria-hidden="true" />
-        Repeet
+        <span className="brand-name">repeet</span>
       </div>
 
-      <nav className="tabs">
+      <nav className="tabs" aria-label="Dashboard">
         {TABS.map(({ id, label }) => (
           <button
             key={id}
@@ -50,6 +50,7 @@ export const Header: React.FC<HeaderProps> = ({
       </nav>
 
       <div className="streak">
+        <span className="streak-dot" aria-hidden="true" />
         {streakCount > 0 ? `${streakCount}-day streak` : 'No streak yet'}
       </div>
       <ThemeToggle />

@@ -48,10 +48,23 @@ export const App: React.FC = () => {
 
   return (
     <main id="root">
-      <div className="popup-head">
-        <h1 className="headline">{headline}</h1>
+      <header className="popup-brand">
+        <div className="brand">
+          <span className="logo" aria-hidden="true" />
+          <span className="brand-name">repeet</span>
+        </div>
         <ThemeToggle />
+      </header>
+
+      <div className="eyebrow">
+        <span className="tick" aria-hidden="true" />
+        Revision deck
       </div>
+
+      <h1 className="headline">
+        {headline}
+        <span className="dot" aria-hidden="true">.</span>
+      </h1>
       <p className="sub">{sub}</p>
 
       {dueCount > 0 && (
@@ -64,7 +77,12 @@ export const App: React.FC = () => {
         </button>
       )}
 
-      <h2>Solved today</h2>
+      <div className="section-head">
+        <span className="index">[01]</span>
+        <h2>Solved today</h2>
+        <span className="rule" aria-hidden="true" />
+      </div>
+
       {solvedToday.length > 0 ? (
         <ul className="solved">
           {solvedToday.slice(0, 6).map((q) => (

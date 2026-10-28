@@ -4,13 +4,9 @@ export type Theme = 'light' | 'dark';
 
 const THEME_KEY = 'repeet-theme';
 
-function systemTheme(): Theme {
-  return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-}
-
 export function getTheme(): Theme {
   const stored = localStorage.getItem(THEME_KEY);
-  return stored === 'light' || stored === 'dark' ? stored : systemTheme();
+  return stored === 'light' || stored === 'dark' ? stored : 'dark';
 }
 
 export function applyTheme(theme: Theme): void {

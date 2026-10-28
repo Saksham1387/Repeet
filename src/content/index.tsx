@@ -38,9 +38,7 @@ declare global {
   (document.body || document.documentElement).append(host);
 
   const applyPanelTheme = (value: unknown): void => {
-    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    const dark = value === 'dark' || (value !== 'light' && prefersDark);
-    host.classList.toggle('dark', dark);
+    host.classList.toggle('dark', value !== 'light');
   };
 
   chrome.storage.local

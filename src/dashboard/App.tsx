@@ -10,6 +10,30 @@ import { LibraryTab } from './LibraryTab';
 
 const VALID_TABS: DashboardTab[] = ['review', 'log', 'library'];
 
+const TAB_COPY: Record<
+  DashboardTab,
+  { index: string; label: string; title: string; sub: string }
+> = {
+  review: {
+    index: '[01]',
+    label: 'Review',
+    title: 'review.',
+    sub: 'Retrieve the pattern before you reveal the note.',
+  },
+  log: {
+    index: '[02]',
+    label: 'Daily log',
+    title: 'daily log.',
+    sub: 'Every solve and review, kept by day.',
+  },
+  library: {
+    index: '[03]',
+    label: 'Library',
+    title: 'library.',
+    sub: 'Search the deck, refine notes, and reschedule cards.',
+  },
+};
+
 export const App: React.FC = () => {
   const [questions, setQuestions] = useState<Record<string, Question>>({});
   const [tab, setTab] = useState<DashboardTab>(() => {
@@ -72,6 +96,16 @@ export const App: React.FC = () => {
         onTabChange={handleTabChange}
       />
       <main id="body">
+        <div className="page-head">
+          <p className="eyebrow">
+            <span>{TAB_COPY[tab].index}</span>
+            {TAB_COPY[tab].label}
+            <span className="rule" aria-hidden="true" />
+          </p>
+          <h1>{TAB_COPY[tab].title}</h1>
+          <p className="page-sub">{TAB_COPY[tab].sub}</p>
+        </div>
+
         {tab === 'review' && (
           <ReviewTab questions={questions} onRefreshQuestions={refreshQuestions} />
         )}
